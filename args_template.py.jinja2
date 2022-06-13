@@ -1,0 +1,43 @@
+import argparse
+
+from {{entrypoint}} import {{",".join([scenario['name'] for scenario in scenarii])}}
+
+{% for scenario in scenarii %}
+def {{scenario.name}}({% for arg in scenario.args %}arg.name, {% if "default" in arg %}={{arg.default}}{{% endif %}} {% endfor %}{% for arg in parent_args %}arg.name{% if "default" in arg %}={{arg.default}}{{% endif %}} {% endfor %}):
+    pass
+{% endfor %}
+
+def main():
+
+    parser = argparse.ArgumentParser(description="{{program_description}}")
+
+    sub_parser = parser.add_subparsers(dest="subparser")
+    # Arguments to this parser will be common to every subcommand, and available as members of args.
+    parent_parser = argparse.ArgumentParser(add_help=False)
+    {% for parent_arg in parent_args %}
+    parent_parser.add_argument(
+        {{parent_arg.arg}}
+    )
+    {% endfor %}
+    {% for scenario in scenarii %}
+    # This is one subcommand parser, with its very own arguments. These will be available as member of args
+    {{scenario.name}}_parser = sub_parser.add_parser(
+        "{{scenario.name}}",
+        parents=[parent_parser]
+    )
+    {% for arg in scenario.args %}
+    {{scenario.name}}_parser.add_argument(
+        {{arg.arg}}
+    )
+    {% endfor %}
+    {{scenario.name}}_parser.set_defaults(func={{scenario.name}})
+    {% endfor %}
+    args = vars(parser.parse_args())
+    func = args["func"]
+    del args["func"]
+
+    return func(**args)
+
+
+if __name__ == "__main__":
+    exit(main())

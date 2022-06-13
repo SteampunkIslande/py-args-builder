@@ -1,0 +1,73 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "additionalProperties": false,
+    "required": [
+        "program_description",
+        "scenarii",
+        "entrypoint"
+    ],
+    "type": "object",
+    "properties": {
+        "program_description": {
+            "type": "string"
+        },
+        "parent_args": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "arg": {
+                        "type": "string"
+                    },
+                    "default": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "scenarii": {
+            "type": "array",
+            "items": {
+                "required": [
+                    "name",
+                    "args"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "args": {
+                        "type": "array",
+                        "items": {
+                            "required": [
+                                "name",
+                                "arg"
+                            ],
+                            "type": "object",
+                            "additionalProperties": false,
+                            "properties": {
+                                "name": {
+                                    "type": "string"
+                                },
+                                "arg": {
+                                    "type": "string"
+                                },
+                                "default": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "entrypoint": {
+            "type": "string"
+        }
+    }
+}
