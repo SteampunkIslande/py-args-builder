@@ -1,11 +1,16 @@
-import argparse
-
-from {{entrypoint}} import {{",".join([scenario['name'] for scenario in scenarii])}}
-
-{% for scenario in scenarii %}
-def {{scenario.name}}({% for arg in scenario.args %}arg.name, {% if "default" in arg %}={{arg.default}}{{% endif %}} {% endfor %}{% for arg in parent_args %}arg.name{% if "default" in arg %}={{arg.default}}{{% endif %}} {% endfor %}):
-    pass
+{% macro declare_arg(argument) -%}
+{% for name in argument.names %}
+    "{{name}}",
 {% endfor %}
+    help="{{argument.help}}",
+    type={{argument.type}},
+    default={{argument.default}},
+    {% if argument.choices %}
+    choices=({% for choice in argument.choices %}{{choice}}{{"" if loop.last else ","}}{% endfor %})
+    {% endif %}
+{%- endmacro %}
+
+import argparse
 
 def main():
 
@@ -14,9 +19,9 @@ def main():
     sub_parser = parser.add_subparsers(dest="subparser")
     # Arguments to this parser will be common to every subcommand, and available as members of args.
     parent_parser = argparse.ArgumentParser(add_help=False)
-    {% for parent_arg in parent_args %}
+    {% for argument in parent_args %}
     parent_parser.add_argument(
-        {{parent_arg.arg}}
+        {{declare_arg(argument)}}
     )
     {% endfor %}
     {% for scenario in scenarii %}
@@ -25,15 +30,19 @@ def main():
         "{{scenario.name}}",
         parents=[parent_parser]
     )
-    {% for arg in scenario.args %}
+    {% for argument in scenario.args %}
     {{scenario.name}}_parser.add_argument(
-        {{arg.arg}}
+        {{declare_arg(argument)}}
     )
     {% endfor %}
     {{scenario.name}}_parser.set_defaults(func={{scenario.name}})
     {% endfor %}
     args = vars(parser.parse_args())
     func = args["func"]
+    
+    chosen_scenario = args["subparser"]
+    del args["subparser"]
+
     del args["func"]
 
     return func(**args)

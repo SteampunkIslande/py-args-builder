@@ -3,9 +3,17 @@
     "entrypoint": "entrypoints",
     "parent_args": [
         {
-            "name": "loss",
-            "arg": "'-l','--loss'",
-            "default": "BCELoss"
+            "names": [
+                "-l",
+                "--loss"
+            ],
+            "help": "Some help",
+            "type": "str",
+            "default": "\"BCELoss\"",
+            "choices": [
+                "\"BCELoss\"",
+                "\"L1Loss\""
+            ]
         }
     ],
     "scenarii": [
@@ -13,8 +21,12 @@
             "name": "contemplate",
             "args": [
                 {
-                    "name": "dataset_dir",
-                    "arg": "'-i','--dataset-dir',help='Path to folder where every child folder is one label'",
+                    "names": [
+                        "-i",
+                        "dataset_dir"
+                    ],
+                    "help": "Path to folder where every child folder is one label",
+                    "type": "str",
                     "default": "images"
                 }
             ]
@@ -23,16 +35,13 @@
             "name": "dream",
             "args": [
                 {
-                    "name": "input",
-                    "arg": "'-i','--input',help='Image to use as input. Defaults to images',default='images'"
-                },
-                {
-                    "name": "output",
-                    "arg": "'-o','--output',help='Path to save images to'"
-                },
-                {
-                    "name": "target",
-                    "arg": "'-t','--target',help='Name of the target label you would like to see in input'"
+                    "names": [
+                        "-i",
+                        "--input"
+                    ],
+                    "help": "Image to use as input. Defaults to images",
+                    "type": "str",
+                    "default": "images"
                 }
             ]
         }

@@ -1,5 +1,41 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema",
+    "definitions": {
+        "argument": {
+            "type": "object",
+            "required": [
+                "names",
+                "help",
+                "type",
+                "default"
+            ],
+            "additionalProperties": false,
+            "properties": {
+                "names": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "minItems": 1
+                },
+                "help": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "default": {
+                    "type": "string"
+                },
+                "choices": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        }
+    },
     "additionalProperties": false,
     "required": [
         "program_description",
@@ -16,17 +52,7 @@
             "items": {
                 "type": "object",
                 "additionalProperties": false,
-                "properties": {
-                    "name": {
-                        "type": "string"
-                    },
-                    "arg": {
-                        "type": "string"
-                    },
-                    "default": {
-                        "type": "string"
-                    }
-                }
+                "$ref": "#/definitions/argument"
             }
         },
         "scenarii": {
@@ -44,23 +70,8 @@
                     "args": {
                         "type": "array",
                         "items": {
-                            "required": [
-                                "name",
-                                "arg"
-                            ],
-                            "type": "object",
-                            "additionalProperties": false,
-                            "properties": {
-                                "name": {
-                                    "type": "string"
-                                },
-                                "arg": {
-                                    "type": "string"
-                                },
-                                "default": {
-                                    "type": "string"
-                                }
-                            }
+                            "$ref": "#/definitions/argument",
+                            "type": "object"
                         }
                     }
                 }
